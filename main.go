@@ -6,8 +6,9 @@ import (
 
 	"github.com/arsalan914/go_dfs/p2p"
 )
-func OnPeer(p2p.Peer) error {
-    fmt.Println("doing some logic with peer outside tcptransport")
+func OnPeer(peer p2p.Peer) error {
+	peer.Close()
+    // fmt.Println("doing some logic with peer outside tcptransport")
 	return nil
 }
 

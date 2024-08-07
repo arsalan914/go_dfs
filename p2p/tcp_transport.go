@@ -107,7 +107,13 @@ func (t *TCPTransport) handeConn(conn net.Conn){
 
 		// }
 
-		if err := t.Decoder.Decode(conn, rpc); err != nil {
+		if err = t.Decoder.Decode(conn, rpc); err != nil {
+			// fmt.Println (reflect.TypeOf(err))
+			// panic(err)
+			return
+			// if err == net.OpError {
+			// 	return 
+			// }
 			fmt.Printf("TCP error: %s\n", err)
 			continue
 		}		
