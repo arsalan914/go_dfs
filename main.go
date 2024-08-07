@@ -6,6 +6,10 @@ import (
 
 	"github.com/arsalan914/go_dfs/p2p"
 )
+func OnPeer(p2p.Peer) error {
+    fmt.Println("doing some logic with peer outside tcptransport")
+	return nil
+}
 
 func main (){
 
@@ -13,6 +17,7 @@ func main (){
 		ListenAddr: ":3000",
 		HandshakeFunc: p2p.NOPhandshakefunc,
 		Decoder: p2p.DefaultDecoder{},
+		OnPeer: OnPeer,
 	}
 
 	tr := p2p.NewTCPTransport(tcpOpts)
