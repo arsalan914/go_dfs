@@ -17,8 +17,8 @@ func TestPathTransformFunc(t *testing.T){
 		t.Errorf("have %s want %s", pathKey.Pathname , expectedPathName)
 	}
 
-	if pathKey.Original != expectedOriginalKey {
-		t.Errorf("have %s want %s", pathKey.Original , expectedOriginalKey)
+	if pathKey.Filename != expectedOriginalKey {
+		t.Errorf("have %s want %s", pathKey.Filename , expectedOriginalKey)
 	}
 
 }
