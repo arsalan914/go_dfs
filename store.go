@@ -61,15 +61,24 @@ func NewStore(opts StoreOpts) *Store{
 	}
 }
 
-func (s *Store) readStream(key string) (io.Reader, error) {
-	pathKey := s.PathTransformFunc(key)
-
-	f, err := os.Open(pathKey.FullPath())
-	if err != nil{
+func (s *Store) Read(key string)(io.Reader, error){
+	f,err := s.readStream(key)
+	if err!= nil{
 		return nil, err
 	}
+
+	defer f.Close()
+
+	buf := new(bytes.Buffer)
+	_, err = io.Copy(buf, f)
 	
-	return nil,nil
+	return buf, err
+}
+
+func (s *Store) readStream(key string) (io.ReadCloser, error) {
+	pathKey := s.PathTransformFunc(key)
+
+	return os.Open(pathKey.FullPath())
 }
 
 func (s *Store) writeStream(key string, r io.Reader) error {
@@ -93,7 +102,7 @@ func (s *Store) writeStream(key string, r io.Reader) error {
 		return err
 	}
 
-	n, err := io.Copy(f, r)
+	n, err := io.Copy(f, buf)
 	if err != nil {
 		return err
 	}
