@@ -66,3 +66,43 @@ func TestStoreDefaultPathTransformFunc(t * testing.T){
 		t.Error(err)
 	}
 }
+
+func TestDeleteKey(t *testing.T){
+	opts := StoreOpts{
+		PathTransformFunc: CASPathTransformFunc,
+	}
+
+	s:= NewStore(opts)
+	key := "momspecial"
+	data := []byte("some jpg data")
+
+	if err:= s.writeStream(key, bytes.NewReader(data)); err != nil {
+		t.Error(err)
+	}
+
+	if err := s.Delete(key);err!= nil {
+		t.Error(err)
+	}
+}
+
+func TestHasKey(t *testing.T){
+	opts := StoreOpts{
+		PathTransformFunc: CASPathTransformFunc,
+	}
+
+	s := NewStore(opts)
+	key := "momspecial"
+	data := []byte("some jpg data")
+
+	if err:=s.writeStream(key, bytes.NewReader(data));err!=nil{
+		t.Error(err)
+	}
+
+	if s.Has(key) != true {
+		t.Errorf("[%s] should exist but it does not.",key)
+	} else {
+		if err:= s.Delete(key);err!=nil{
+			t.Error(err)
+		}
+	}
+}
