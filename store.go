@@ -72,6 +72,15 @@ func ( s*Store) Has (key string) bool {
 	return true
 }
 
+func (p PathKey) FirstPathName() string{
+	paths := strings.Split(p.Pathname, "/")
+
+	if len(paths) == 0 {
+		return ""
+	}
+	return paths[0]
+}
+
 func (s *Store) Delete(key string) error{
 	pathKey := s.PathTransformFunc(key)
 
@@ -79,7 +88,8 @@ func (s *Store) Delete(key string) error{
 		log.Printf("delete [%s] from disk", pathKey.Filename)
 	}()
 	
-	return os.RemoveAll(pathKey.FullPath())
+	
+	return os.RemoveAll(pathKey.FirstPathName())
 }
 
 func (s *Store) Read(key string)(io.Reader, error){
