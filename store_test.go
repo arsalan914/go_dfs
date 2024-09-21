@@ -51,7 +51,6 @@ func TestStoreCASPathTransformFunc(t * testing.T){
 	if string(b) != string(data) {
 		t.Errorf("want %s , have %s", data, b)
 	}
-
 }
 
 func TestStoreDefaultPathTransformFunc(t * testing.T){
@@ -65,9 +64,13 @@ func TestStoreDefaultPathTransformFunc(t * testing.T){
 	if err := s.writeStream("myspecialpicture", data); err != nil {
 		t.Error(err)
 	}
+
+	if err := s.Delete("myspecialpicture");err!= nil {
+		t.Error(err)
+	}	
 }
 
-func TestDeleteKey(t *testing.T){
+func TestStoreDeleteKey(t *testing.T){
 	opts := StoreOpts{
 		PathTransformFunc: CASPathTransformFunc,
 	}
@@ -105,4 +108,33 @@ func TestHasKey(t *testing.T){
 			t.Error(err)
 		}
 	}
+}
+
+func TestStore(t * testing.T){
+	opts := StoreOpts{
+		PathTransformFunc : CASPathTransformFunc,
+	}
+
+	s := NewStore(opts)
+	key := "momspecial"
+	data  := []byte("some jpg bytes")
+	if err := s.writeStream(key, bytes.NewReader(data)); err != nil {
+		t.Error(err)
+	}
+	r, err := s.Read(key)
+	if err != nil {
+		t.Error(err)
+	}
+
+	b, err := ioutil.ReadAll(r)
+	if err != nil {
+		t.Error(err)
+	}
+
+	fmt.Println(string(b))
+	if string(b) != string(data) {
+		t.Errorf("want %s , have %s", data, b)
+	}
+
+	s.Delete(key)
 }
